@@ -63,7 +63,7 @@ const translations = {
     dir: "rtl", mission: "المهمة", diagnostic: "تشخيص سريع", discovery: "نكتشف", guided: "مثال", practice: "تدريب", mystery: "بطاقة السر", independent: "تحدي", exit: "خروج", result: "النتيجة",
     numberLine: "خط الأعداد", ready: "جاهز للمغامرة؟", helpCamel: "ساعد الجمل الصغير يوصل إلى الواحة!", start: "ابدأ", previous: "السابق", next: "التالي", restart: "إعادة", step: "خطوة", hint: "تلميح",
     findFive: "وين الرقم ٥؟", startFive: "نبدأ من ٥.", walkThree: "خلينا نمشي ٣ خطوات.", howMuch: "كم يصير؟", moveFour: "حرّك الجمل ٤ خطوات.", whereStarted: "من وين بدأ الجمل؟", solveAlone: "حلها لوحدك.", reachedOasis: "وصلنا إلى الواحة!",
-    skillSummary: "ملخص المهارة", excellent: "ممتاز", morePractice: "يحتاج إلى تدريب أكثر", needsSupport: "يحتاج إلى دعم", correctFive: "صحيح! هذا هو الرقم ٥.", closeTry: "قريب. شوف الأرقام اللي حوله وجرب مرة ثانية.",
+    skillSummary: "ملخص المهارة", excellent: "ممتاز", morePractice: "يحتاج إلى تدريب أكثر", needsSupport: "يحتاج إلى دعم", correctFive: "صحيح! هذا هو الرقم ٥.", slotFilled: "صحيح. الرقم {n} في مكانه.", closeTry: "قريب. شوف الأرقام اللي حوله وجرب مرة ثانية.",
     stepCount: "خطوة {n}.", reachedEight: "وصل الجمل إلى ٨ بعد ٣ خطوات.", reachedAnswer: "{equation}. وصلنا إلى {answer}.", chooseLanding: "اختر رقم الوصول.", correctLanding: "صحيح. هبط الجمل على الرقم المناسب.", oneMoreStep: "باقي خطوة واحدة.", extraJump: "قفزة زيادة! نرجع خطوة.", tryAgain: "جرّب مرة ثانية بهدوء.", revealLine: "خلينا نكشف خط الأعداد ونعدّ مع بعض.",
     guide: "دليل المعلم", sayReady: "قل: جاهز نبدأ مغامرة خط الأعداد؟", waitReady: "اضغط ابدأ عندما يكون الطالب جاهز.", sayFindFive: "قل: وين الرقم خمسة؟", waitFindFive: "انتظر ضغطة الطالب على مكان الرقم.", sayStartFive: "قل: نبدأ من ٥. خلينا نمشي ٣ خطوات.", waitOneStep: "كل ضغطة تعني خطوة واحدة.", sayGuided: "قل: ابدأ من ٥، وحرّك ٣ خطوات.", waitGuided: "بعد الخطوة الثالثة اسأل: وين وصل؟", sayPractice: "قل: جرّب بنفسك. عد الخطوات بصوتك.", waitPractice: "إذا توقف عند ٩، وضّح أن بقيت خطوة.", sayMystery: "قل: من وين بدأ الجمل؟", waitMystery: "خلي أثر الحركة ظاهر: ٧، ٨، ٩، ١٠.", sayIndependent: "قل: جرّب بدون مساعدة.", waitIndependent: "استخدم التلميح فقط إذا احتاج الطالب.", sayExit: "قل: حلها لوحدك.", waitExit: "لا تعط تلميح تلقائي.", sayResult: "قل: ممتاز، خلينا نشوف مهارة اليوم.", waitResult: "راجع الملخص مع الطالب أو ولي الأمر.",
     recognition: "تمييز الرقم", startPoint: "نقطة البداية", directionMove: "اتجاه الحركة", stepCounting: "عد الخطوات", independentAnswer: "الحل المستقل", hintUsed: "استخدم تلميح", exitAttempts: "محاولات اختبار الخروج", exitTime: "وقت اختبار الخروج", done: "تم", review: "يحتاج مراجعة", clear: "واضحة", forward: "للأمام", correct: "صحيح", incomplete: "غير مكتمل", yes: "نعم", no: "لا", seconds: "ث",
@@ -72,7 +72,7 @@ const translations = {
     dir: "ltr", mission: "Mission", diagnostic: "Quick Check", discovery: "Discover", guided: "Example", practice: "Practice", mystery: "Mystery Card", independent: "Challenge", exit: "Exit Check", result: "Result",
     numberLine: "Number Line", ready: "Ready for the adventure?", helpCamel: "Help the little camel reach the oasis!", start: "Start", previous: "Previous", next: "Next", restart: "Restart", step: "Step", hint: "Hint",
     findFive: "Where is number 5?", startFive: "We start from 5.", walkThree: "Let's walk 3 steps.", howMuch: "What is the answer?", moveFour: "Move the camel 4 steps.", whereStarted: "Where did the camel start?", solveAlone: "Solve it on your own.", reachedOasis: "We reached the oasis!",
-    skillSummary: "Skill Summary", excellent: "Excellent", morePractice: "Needs more practice", needsSupport: "Needs support", correctFive: "Correct! This is number 5.", closeTry: "Close. Look at the nearby numbers and try again.",
+    skillSummary: "Skill Summary", excellent: "Excellent", morePractice: "Needs more practice", needsSupport: "Needs support", correctFive: "Correct! This is number 5.", slotFilled: "Correct. Number {n} fits here.", closeTry: "Close. Look at the nearby numbers and try again.",
     stepCount: "Step {n}.", reachedEight: "The camel reached 8 after 3 steps.", reachedAnswer: "{equation}. We reached {answer}.", chooseLanding: "Choose the landing number.", correctLanding: "Correct. The camel landed on the right number.", oneMoreStep: "One step is still left.", extraJump: "One extra jump. Let's go back.", tryAgain: "Try again calmly.", revealLine: "Let's show the number line and count together.",
     guide: "Teacher Guide", sayReady: "Say: Ready to start the number-line adventure?", waitReady: "Press Start when the student is ready.", sayFindFive: "Say: Where is number five?", waitFindFive: "Wait for the student to tap the number position.", sayStartFive: "Say: Start at 5. Let's walk 3 steps.", waitOneStep: "Each tap is one step.", sayGuided: "Say: Start at 5 and move 3 steps.", waitGuided: "After the third step ask: Where did it land?", sayPractice: "Say: Try it yourself. Count the steps out loud.", waitPractice: "If the student stops at 9, show that one step remains.", sayMystery: "Say: Where did the camel start?", waitMystery: "Keep the trail visible: 7, 8, 9, 10.", sayIndependent: "Say: Try without help.", waitIndependent: "Use the hint only if the student needs it.", sayExit: "Say: Solve it on your own.", waitExit: "Do not give an automatic hint.", sayResult: "Say: Excellent, let's review today's skill.", waitResult: "Review the summary with the student or parent.",
     recognition: "Number recognition", startPoint: "Starting point", directionMove: "Movement direction", stepCounting: "Step counting", independentAnswer: "Independent answer", hintUsed: "Hint used", exitAttempts: "Exit attempts", exitTime: "Exit time", done: "Done", review: "Needs review", clear: "Clear", forward: "Forward", correct: "Correct", incomplete: "Incomplete", yes: "Yes", no: "No", seconds: "s",
@@ -81,7 +81,7 @@ const translations = {
     dir: "ltr", mission: "任务", diagnostic: "快速检查", discovery: "发现", guided: "例题", practice: "练习", mystery: "神秘卡片", independent: "挑战", exit: "出口检测", result: "结果",
     numberLine: "数轴", ready: "准备好开始冒险了吗？", helpCamel: "帮助小骆驼到达绿洲！", start: "开始", previous: "上一步", next: "下一步", restart: "重新开始", step: "前进一步", hint: "提示",
     findFive: "数字5在哪里？", startFive: "我们从5开始。", walkThree: "我们走3步。", howMuch: "答案是多少？", moveFour: "让骆驼走4步。", whereStarted: "骆驼从哪里开始？", solveAlone: "自己试试看。", reachedOasis: "我们到达绿洲了！",
-    skillSummary: "能力总结", excellent: "优秀", morePractice: "需要多练习", needsSupport: "需要支持", correctFive: "正确！这是数字5。", closeTry: "很接近。看看旁边的数字，再试一次。",
+    skillSummary: "能力总结", excellent: "优秀", morePractice: "需要多练习", needsSupport: "需要支持", correctFive: "正确！这是数字5。", slotFilled: "正确，数字{n}就在这里。", closeTry: "很接近。看看旁边的数字，再试一次。",
     stepCount: "第{n}步。", reachedEight: "骆驼走3步后到达8。", reachedAnswer: "{equation}。我们到达{answer}。", chooseLanding: "选择到达的数字。", correctLanding: "正确。骆驼落在了正确的数字上。", oneMoreStep: "还差一步。", extraJump: "多跳了一步。我们退回来。", tryAgain: "慢慢再试一次。", revealLine: "我们打开数轴一起数。",
     guide: "教师提示", sayReady: "老师说：准备开始数轴冒险了吗？", waitReady: "学生准备好后点击开始。", sayFindFive: "老师说：数字5在哪里？", waitFindFive: "等待学生点击数字位置。", sayStartFive: "老师说：从5开始，走3步。", waitOneStep: "每点击一次就是一步。", sayGuided: "老师说：从5开始，向前走3步。", waitGuided: "第三步后问：落到哪里了？", sayPractice: "老师说：自己试试，大声数步数。", waitPractice: "如果学生停在9，提示还差一步。", sayMystery: "老师说：骆驼从哪里开始？", waitMystery: "保留路径：7、8、9、10。", sayIndependent: "老师说：先不看提示，自己试试。", waitIndependent: "只有学生需要时才使用提示。", sayExit: "老师说：自己完成这题。", waitExit: "不要自动给提示。", sayResult: "老师说：很好，我们看看今天的技能。", waitResult: "和学生或家长一起看总结。",
     recognition: "数字识别", startPoint: "起点", directionMove: "移动方向", stepCounting: "数步数", independentAnswer: "独立作答", hintUsed: "使用提示", exitAttempts: "出口检测尝试", exitTime: "出口检测用时", done: "完成", review: "需要复习", clear: "清楚", forward: "向前", correct: "正确", incomplete: "未完成", yes: "是", no: "否", seconds: "秒",
@@ -100,7 +100,7 @@ const lesson = [
   { id: "result", label: "result", type: "result", bg: "final", camel: "celebrate", title: "reachedOasis", cue: ["sayResult", "waitResult"] },
 ];
 
-const state = { lang: "ar", screen: 0, currentPosition: null, previousPosition: null, stepsTaken: 0, feedback: null, characterMood: null, rewardKey: 0, rewardStrength: null, selectedAnswer: null, showHint: false, completed: { welcome: false }, stats: {}, exitStart: null };
+const state = { lang: "ar", screen: 0, currentPosition: null, previousPosition: null, stepsTaken: 0, feedback: null, characterMood: null, rewardKey: 0, rewardStrength: null, selectedAnswer: null, activeBlank: null, filledNumbers: [], showHint: false, completed: { welcome: false }, stats: {}, exitStart: null };
 const app = document.querySelector("#app");
 
 function tr(key, vars = {}) {
@@ -163,6 +163,8 @@ function resetScreenProgress(screen) {
   state.characterMood = null;
   state.rewardStrength = null;
   state.selectedAnswer = null;
+  state.activeBlank = null;
+  state.filledNumbers = [];
   state.showHint = false;
   if (screen.id === "exit") state.exitStart = Date.now();
 }
@@ -194,7 +196,7 @@ function render() {
       <div class="top-bar">${HeaderBrand(screen)}${ProgressBar()}${LanguageSwitcher()}</div>
       ${renderScreen(screen)}
       ${FeedbackLayer()}${RewardLayer()}
-      <div class="bottom-bar">
+      <div class="bottom-bar" data-screen-type="${screen.type}">
         ${state.screen === 0 ? "" : `<button class="secondary-btn nav-previous" data-action="prev">${tr("previous")}</button>`}
         ${TeacherCue(screen.cue)}
         <button class="primary-btn nav-next" data-action="next" ${canAdvance(screen) ? "" : "disabled"}>${state.screen === lesson.length - 1 ? tr("restart") : tr("next")}</button>
@@ -258,19 +260,21 @@ function NumberLine({ min = 1, max = 12, start, current, hidden = [], clickable 
   const trailWidth = trailStart && trailEnd ? `${(Math.abs(trailEnd - trailStart) / count) * 100}%` : "0%";
   const ticks = [];
   for (let n = min; n <= max; n += 1) {
-    const classes = ["tick", hidden.includes(n) ? "hidden-number" : "", clickable ? "clickable" : "", activeNumbers.includes(n) ? "active" : "", current === n ? "landed" : "", nearNumbers.includes(n) ? "near" : ""].filter(Boolean).join(" ");
-    ticks.push(`<button class="${classes}" style="left:${position(n)}" data-number="${n}" aria-label="${formatNumber(n)}"><span class="number-label">${formatNumber(n)}</span></button>`);
+    const isHidden = hidden.includes(n) && !state.filledNumbers.includes(n);
+    const classes = ["tick", isHidden ? "hidden-number blank-slot" : "", state.activeBlank === n ? "blank-active" : "", state.filledNumbers.includes(n) ? "blank-complete" : "", clickable ? "clickable" : "", activeNumbers.includes(n) ? "active" : "", current === n ? "landed" : "", nearNumbers.includes(n) ? "near" : ""].filter(Boolean).join(" ");
+    ticks.push(`<button class="${classes}" style="left:${position(n)}" data-number="${n}" aria-label="${isHidden ? `${tr("findFive")} ${formatNumber(n)}` : formatNumber(n)}"><span class="number-label">${isHidden ? unknownAnswer() : formatNumber(n)}</span></button>`);
   }
   return `<div class="numberline-wrap"><div class="number-line"><div class="line-rail"></div><div class="step-trail" style="--trail-left:${trailLeft}; --trail-width:${trailWidth};"></div>${ticks.join("")}${badges.map((num, index) => `<span class="step-arc" style="--arc-left:${position(num - 1)}; --arc-width:${100 / count}%;"></span><span class="movement-badge" style="left:${position(num)}">${formatNumber(index + 1)}</span>`).join("")}<span class="landing-pop" style="left:${position(camelNum)}"></span>${CamelCharacter(movementState, `left:${position(camelNum)}; --from-left:${position(fromNum)}; --to-left:${position(camelNum)}; bottom:58px; --base-y:0%; --hop-lift:96px; --camel-size:var(--character-numberline);`, motion, camelDirection)}</div></div>`;
 }
 
 function renderScreen(screen) {
   if (screen.type === "welcome") {
-    return `<div class="lesson-content welcome-grid"><div class="journey-art"><img class="asset sign" src="${assets.objects.sign}" alt="" />${CamelCharacter("neutral", "left:40%; --from-left:22%; --to-left:40%; bottom:-24%; --camel-size:var(--character-hero);", "idle", "right")}</div><div class="mission-panel"><p class="kicker">${tr("numberLine")}</p><h1>${tr(screen.title)}</h1><p class="student-prompt">${tr(screen.prompt)}</p><button class="primary-btn" data-action="start">${tr("start")}</button></div></div>`;
+    return `<div class="lesson-content welcome-grid"><div class="journey-art"><img class="asset sign" src="${assets.objects.sign}" alt="" />${CamelCharacter("neutral", "left:108%; --from-left:90%; --to-left:108%; bottom:-24%; --camel-size:var(--character-hero);", "idle", "right")}</div><div class="mission-panel"><p class="kicker">${tr("numberLine")}</p><h1>${tr(screen.title)}</h1><p class="student-prompt">${tr(screen.prompt)}</p><button class="primary-btn" data-action="start">${tr("start")}</button></div></div>`;
   }
   if (screen.type === "diagnostic") {
     const correct = state.completed[screen.id];
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 10, current: correct ? screen.target : 3, hidden: screen.hidden, clickable: true, activeNumbers: correct ? [screen.target] : [], nearNumbers: state.feedback?.kind === "try" ? [4, 6] : [] })}<div class="controls-row"></div></div>`;
+    const choices = state.activeBlank ? AnswerCards(screen.hidden, state.activeBlank, true) : "";
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 10, current: correct ? screen.target : 3, hidden: screen.hidden, clickable: true, activeNumbers: correct ? [screen.target] : [], nearNumbers: state.feedback?.kind === "try" ? [4, 6] : [] })}<div class="controls-row">${choices}</div></div>`;
   }
   if (screen.type === "movement") {
     const landed = state.currentPosition ?? screen.start;
@@ -299,7 +303,7 @@ function renderScreen(screen) {
       : `<button class="move-btn" data-action="move-step">${tr("step")}</button>${screen.type === "independent" ? `<button class="hint-btn" data-action="hint">${tr("hint")}</button>` : ""}<span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
     return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${showLine ? NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) }) : standalone}<div class="controls-row">${challengeAction}</div></div>${HintLayer(tr("revealLine"))}`;
   }
-  return `<div class="lesson-content result-layout"><div class="final-trophy-wrap"><img class="final-trophy" src="${assets.rewards.trophy}" alt="" /></div><div class="final-body"><div class="final-camel">${CamelCharacter("celebrate", "left:50%; --from-left:50%; --to-left:50%; bottom:0%; --base-y:0%; --camel-size:var(--character-celebration);", "celebrate")}</div><div class="result-summary-zone">${ResultPanel(screen)}</div></div></div>`;
+  return `<div class="lesson-content result-layout"><div class="final-body"><div class="final-camel">${CamelCharacter("celebrate", "left:50%; --from-left:50%; --to-left:50%; bottom:0%; --base-y:0%; --camel-size:var(--character-celebration);", "celebrate")}</div><div class="result-summary-zone"><img class="final-trophy" src="${assets.rewards.trophy}" alt="" />${ResultPanel(screen)}</div></div></div>`;
 }
 
 function AnswerCards(choices, answer, enabled) {
@@ -337,7 +341,7 @@ function handleAction(action, screen) {
   if (action === "prev") return goTo(state.screen - 1);
   if (action === "next") {
     if (state.screen === lesson.length - 1) {
-      Object.assign(state, { screen: 0, currentPosition: null, previousPosition: null, stepsTaken: 0, feedback: null, characterMood: null, rewardStrength: null, selectedAnswer: null, showHint: false, completed: { welcome: false }, stats: {}, exitStart: null });
+      Object.assign(state, { screen: 0, currentPosition: null, previousPosition: null, stepsTaken: 0, feedback: null, characterMood: null, rewardStrength: null, selectedAnswer: null, activeBlank: null, filledNumbers: [], showHint: false, completed: { welcome: false }, stats: {}, exitStart: null });
       return render();
     }
     return goTo(state.screen + 1);
@@ -354,11 +358,10 @@ function handleAction(action, screen) {
 
 function handleNumber(number, screen) {
   if (screen.type !== "diagnostic") return;
-  if (number === screen.target) {
-    completeCurrent(); markAttempt(screen.id, true, { response: number }); setCharacterMood("happy"); burst("small"); setFeedback("good", tr("correctFive"));
-  } else {
-    markAttempt(screen.id, false, { response: number }); setCharacterMood("confused"); setFeedback("try", tr("closeTry"));
-  }
+  if (!screen.hidden.includes(number) || state.filledNumbers.includes(number)) return;
+  state.activeBlank = number;
+  state.selectedAnswer = null;
+  state.feedback = null;
   render();
 }
 
@@ -389,6 +392,23 @@ function moveStep(screen) {
 }
 
 function handleAnswer(answer, screen) {
+  if (screen.type === "diagnostic") {
+    state.selectedAnswer = answer;
+    const correct = answer === state.activeBlank;
+    if (correct) {
+      state.filledNumbers.push(answer);
+      setCharacterMood("happy"); burst("small");
+      if (answer === screen.target) {
+        completeCurrent(); markAttempt(screen.id, true, { response: answer }); setFeedback("good", tr("correctFive"));
+      } else {
+        markAttempt(screen.id, true, { response: answer }); setFeedback("good", tr("slotFilled", { n: formatNumber(answer) }));
+        state.activeBlank = screen.hidden.find((number) => !state.filledNumbers.includes(number)) ?? null;
+      }
+    } else {
+      markAttempt(screen.id, false, { response: answer }); setCharacterMood("confused"); setFeedback("try", tr("closeTry"));
+    }
+    return render();
+  }
   state.selectedAnswer = answer;
   const correct = answer === screen.answer;
   if (correct) {
