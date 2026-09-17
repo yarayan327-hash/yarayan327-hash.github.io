@@ -15,16 +15,16 @@
   --space-6: 48px;
   --space-8: 64px;
   --top-zone: 9%;
-  --equation-zone: 21%;
-  --interaction-zone: 55%;
-  --bottom-zone: 15%;
-  --safe-margin: 28px;
+  --equation-zone: 17%;
+  --interaction-zone: 56%;
+  --bottom-zone: 17%;
+  --safe-margin: 3.4%;
   --radius-card: 8px;
-  --character-normal: clamp(138px, 20vh, 182px);
-  --character-numberline: clamp(126px, 18vh, 166px);
-  --character-hero: clamp(180px, 30vh, 250px);
-  --character-celebration: clamp(220px, 31vh, 282px);
-  --equation-size: clamp(34px, 6.4vh, 68px);
+  --character-normal: clamp(126px, 18vh, 174px);
+  --character-numberline: clamp(122px, 17vh, 164px);
+  --character-hero: clamp(166px, 25vh, 220px);
+  --character-celebration: clamp(190px, 27vh, 250px);
+  --equation-size: clamp(34px, 5.7vh, 60px);
 }
 
 * {
@@ -97,6 +97,27 @@ button {
   align-items: center;
   height: calc(var(--top-zone) - 10px);
   z-index: 10;
+  direction: ltr;
+}
+
+.header-brand {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+[dir="rtl"] .header-brand .screen-label {
+  direction: rtl;
+}
+
+.header-brand img {
+  width: clamp(126px, 9.5vw, 182px);
+  height: 52px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .progress {
@@ -126,11 +147,11 @@ button {
 }
 
 .screen-label {
-  min-width: 104px;
-  padding: 9px 13px;
+  min-width: 88px;
+  padding: 8px 11px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.86);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   text-align: center;
   box-shadow: 0 8px 18px rgba(31, 47, 72, 0.12);
@@ -317,10 +338,6 @@ button:disabled {
   animation: introCamelArrive 760ms cubic-bezier(.16,.9,.2,1) 120ms both, introCamelBounce 720ms ease-in-out 900ms 1;
 }
 
-.welcome-grid .camel-image {
-  transform: scaleX(-1);
-}
-
 .character-anchor {
   position: absolute;
   width: var(--camel-size, 150px);
@@ -339,6 +356,16 @@ button:disabled {
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+/* Supplied camel art faces left. Flip only the artwork when math moves right. */
+.camel-image.camel-facing-right {
+  transform: scaleX(-1);
+}
+
+.camel-image.camel-facing-left,
+.camel-image.camel-facing-neutral {
+  transform: scaleX(1);
 }
 
 .character-motion-idle,
@@ -371,14 +398,14 @@ button:disabled {
 }
 
 .activity-layout {
-  grid-template-rows: minmax(104px, var(--equation-zone)) minmax(0, 1fr) minmax(72px, var(--bottom-zone));
+  grid-template-rows: minmax(96px, var(--equation-zone)) minmax(0, 1fr) minmax(76px, var(--bottom-zone));
   overflow: visible;
 }
 
 .question-card {
   align-self: stretch;
   min-height: 0;
-  padding: var(--space-2) var(--space-3);
+  padding: 14px var(--space-3);
   display: grid;
   grid-template-columns: minmax(170px, 0.72fr) minmax(260px, 1fr) auto;
   gap: var(--space-3);
@@ -596,15 +623,30 @@ button:disabled {
   padding-bottom: var(--space-1);
 }
 
-.choice-card {
+.step-progress {
   min-width: 86px;
-  min-height: 76px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1f2f48;
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.choice-card {
+  width: 104px;
+  min-width: 104px;
+  height: 72px;
+  min-height: 72px;
   display: grid;
   place-items: center;
   background: var(--paper);
   border: 4px solid transparent;
   color: #1f2f48;
-  font-size: 36px;
+  font-size: 34px;
   direction: ltr;
   unicode-bidi: isolate;
 }
@@ -657,14 +699,13 @@ button:disabled {
 }
 
 .teacher-cue {
-  position: absolute;
-  right: 26px;
-  bottom: 20px;
-  width: min(460px, 48%);
+  position: relative;
+  width: min(460px, 44%);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 9px 18px rgba(31, 47, 72, 0.12);
   z-index: 15;
+  justify-self: center;
 }
 
 .teacher-cue summary {
@@ -680,14 +721,49 @@ button:disabled {
   line-height: 1.35;
 }
 
-.nav-controls {
+.bottom-bar {
   position: absolute;
-  left: 26px;
-  right: auto;
-  bottom: 20px;
-  display: flex;
-  gap: 10px;
+  left: var(--safe-margin);
+  right: var(--safe-margin);
+  bottom: 14px;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: minmax(124px, 1fr) minmax(300px, 1.8fr) minmax(124px, 1fr);
+  align-items: end;
+  gap: 16px;
   z-index: 16;
+  direction: ltr;
+}
+
+.bottom-bar .primary-btn,
+.bottom-bar .secondary-btn {
+  margin: 0;
+  min-width: 124px;
+  min-height: 52px;
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+.bottom-bar .nav-previous {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.bottom-bar .nav-next {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.bottom-bar .teacher-cue {
+  grid-column: 2;
+}
+
+[dir="rtl"] .bottom-bar .teacher-cue {
+  direction: rtl;
+}
+
+.bottom-bar .nav-next:disabled {
+  visibility: hidden;
 }
 
 .reward-layer {
@@ -1106,6 +1182,14 @@ button:disabled {
   }
 
   .teacher-cue {
-    width: 54%;
+    width: 100%;
+  }
+
+  .header-brand img {
+    width: 118px;
+  }
+
+  .screen-label {
+    display: none;
   }
 }

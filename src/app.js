@@ -1,6 +1,9 @@
 const isDevAssetPreview = new URLSearchParams(window.location.search).get("debug") === "assets";
 
 const assets = {
+  brand: {
+    logo: "/assets/brand/51talk-khususi-logo.png",
+  },
   backgrounds: {
     welcome: "/assets/backgrounds/desert-adventure.png",
     learning: "/assets/backgrounds/desert-learning.png",
@@ -162,6 +165,11 @@ function goTo(index) {
 function completeCurrent() { state.completed[lesson[state.screen].id] = true; }
 function canAdvance(screen) { return screen.type === "result" || state.completed[screen.id]; }
 
+function getCamelDirection(start, target) {
+  if (!Number.isFinite(start) || !Number.isFinite(target) || start === target) return "neutral";
+  return target > start ? "right" : "left";
+}
+
 function render() {
   if (isDevAssetPreview) return renderAssetDebug();
   const screen = lesson[state.screen];
@@ -170,12 +178,13 @@ function render() {
   app.innerHTML = `
     <section class="lesson-shell" style="--bg: url('${assets.backgrounds[screen.bg]}')" data-screen="${screen.id}" dir="${translations[state.lang].dir}">
       <div class="scene-bg"></div>
-      <div class="top-bar">${ProgressBar()}<div class="screen-label">${tr(screen.label)}</div>${LanguageSwitcher()}</div>
+      <div class="top-bar">${HeaderBrand(screen)}${ProgressBar()}${LanguageSwitcher()}</div>
       ${renderScreen(screen)}
-      ${FeedbackLayer()}${RewardLayer()}${TeacherCue(screen.cue)}
-      <div class="nav-controls">
-        <button class="secondary-btn" data-action="prev" ${state.screen === 0 ? "disabled" : ""}>${tr("previous")}</button>
-        <button class="primary-btn" data-action="next" ${canAdvance(screen) ? "" : "disabled"}>${state.screen === lesson.length - 1 ? tr("restart") : tr("next")}</button>
+      ${FeedbackLayer()}${RewardLayer()}
+      <div class="bottom-bar">
+        <button class="secondary-btn nav-previous" data-action="prev" ${state.screen === 0 ? "disabled" : ""}>${tr("previous")}</button>
+        ${TeacherCue(screen.cue)}
+        <button class="primary-btn nav-next" data-action="next" ${canAdvance(screen) ? "" : "disabled"}>${state.screen === lesson.length - 1 ? tr("restart") : tr("next")}</button>
       </div>
     </section>`;
   bindEvents(screen);
@@ -185,15 +194,19 @@ function LanguageSwitcher() {
   return `<div class="language-switcher" aria-label="Language">${["ar", "en", "zh"].map((lang) => `<button class="${state.lang === lang ? "active" : ""}" data-lang="${lang}">${lang === "ar" ? "العربية" : lang === "en" ? "EN" : "中文"}</button>`).join("")}</div>`;
 }
 
+function HeaderBrand(screen) {
+  return `<div class="header-brand"><img src="${assets.brand.logo}" alt="51Talk Khususi" /><span class="screen-label">${tr(screen.label)}</span></div>`;
+}
+
 function ProgressBar() {
   return `<div class="progress" aria-label="${tr("numberLine")}">${lesson.map((item, index) => `<span class="progress-dot ${index < state.screen ? "done" : ""} ${index === state.screen ? "current" : ""}" title="${tr(item.label)}"></span>`).join("")}</div>`;
 }
 
-function CamelCharacter(stateName, style = "", motion = "") {
+function CamelCharacter(stateName, style = "", motion = "", direction = "neutral") {
   const requested = state.characterMood ?? stateName;
   const src = assets.characters[requested];
   if (!src) return "";
-  return `<div class="character-anchor character-motion-${motion} character-state-${requested}" style="${style}"><img class="camel-image" src="${src}" alt="${tr("helpCamel")}" /></div>`;
+  return `<div class="character-anchor character-motion-${motion} character-state-${requested}" style="${style}"><img class="camel-image camel-facing-${direction}" src="${src}" alt="${tr("helpCamel")}" data-direction="${direction}" /></div>`;
 }
 
 function TeacherCue(cueKeys) {
@@ -221,6 +234,11 @@ function NumberLine({ min = 1, max = 12, start, current, hidden = [], clickable 
   const fromNum = state.previousPosition ?? camelNum;
   const movementState = state.stepsTaken > 0 && !state.completed[lesson[state.screen].id] ? "hop" : lesson[state.screen].camel;
   const motion = state.stepsTaken > 0 && !state.completed[lesson[state.screen].id] ? "hop" : movementState;
+  const activeScreen = lesson[state.screen];
+  const destination = Number.isFinite(activeScreen.start) && Number.isFinite(activeScreen.moves)
+    ? activeScreen.start + activeScreen.moves
+    : camelNum;
+  const camelDirection = getCamelDirection(activeScreen.start ?? fromNum, destination);
   const trailLeft = trailStart && trailEnd ? position(Math.min(trailStart, trailEnd)) : "0%";
   const trailWidth = trailStart && trailEnd ? `${(Math.abs(trailEnd - trailStart) / count) * 100}%` : "0%";
   const ticks = [];
@@ -228,12 +246,12 @@ function NumberLine({ min = 1, max = 12, start, current, hidden = [], clickable 
     const classes = ["tick", hidden.includes(n) ? "hidden-number" : "", clickable ? "clickable" : "", activeNumbers.includes(n) ? "active" : "", current === n ? "landed" : "", nearNumbers.includes(n) ? "near" : ""].filter(Boolean).join(" ");
     ticks.push(`<button class="${classes}" style="left:${position(n)}" data-number="${n}" aria-label="${formatNumber(n)}"><span class="number-label">${formatNumber(n)}</span></button>`);
   }
-  return `<div class="numberline-wrap"><div class="number-line"><div class="line-rail"></div><div class="step-trail" style="--trail-left:${trailLeft}; --trail-width:${trailWidth};"></div>${ticks.join("")}${badges.map((num, index) => `<span class="step-arc" style="--arc-left:${position(num - 1)}; --arc-width:${100 / count}%;"></span><span class="movement-badge" style="left:${position(num)}">${formatNumber(index + 1)}</span>`).join("")}<span class="landing-pop" style="left:${position(camelNum)}"></span>${CamelCharacter(movementState, `left:${position(camelNum)}; --from-left:${position(fromNum)}; --to-left:${position(camelNum)}; bottom:58px; --base-y:0%; --hop-lift:96px; --camel-size:var(--character-numberline);`, motion)}</div></div>`;
+  return `<div class="numberline-wrap"><div class="number-line"><div class="line-rail"></div><div class="step-trail" style="--trail-left:${trailLeft}; --trail-width:${trailWidth};"></div>${ticks.join("")}${badges.map((num, index) => `<span class="step-arc" style="--arc-left:${position(num - 1)}; --arc-width:${100 / count}%;"></span><span class="movement-badge" style="left:${position(num)}">${formatNumber(index + 1)}</span>`).join("")}<span class="landing-pop" style="left:${position(camelNum)}"></span>${CamelCharacter(movementState, `left:${position(camelNum)}; --from-left:${position(fromNum)}; --to-left:${position(camelNum)}; bottom:58px; --base-y:0%; --hop-lift:96px; --camel-size:var(--character-numberline);`, motion, camelDirection)}</div></div>`;
 }
 
 function renderScreen(screen) {
   if (screen.type === "welcome") {
-    return `<div class="lesson-content welcome-grid"><div class="journey-art"><img class="asset sign" src="${assets.objects.sign}" alt="" />${CamelCharacter("neutral", "left:92%; --from-left:76%; --to-left:92%; bottom:-7%; --camel-size:clamp(156px, 25vh, 216px);", "idle")}</div><div class="mission-panel"><p class="kicker">${tr("numberLine")}</p><h1>${tr(screen.title)}</h1><p class="student-prompt">${tr(screen.prompt)}</p><button class="primary-btn" data-action="start">${tr("start")}</button></div></div>`;
+    return `<div class="lesson-content welcome-grid"><div class="journey-art"><img class="asset sign" src="${assets.objects.sign}" alt="" />${CamelCharacter("neutral", "left:92%; --from-left:76%; --to-left:92%; bottom:-7%; --camel-size:var(--character-hero);", "idle", "right")}</div><div class="mission-panel"><p class="kicker">${tr("numberLine")}</p><h1>${tr(screen.title)}</h1><p class="student-prompt">${tr(screen.prompt)}</p><button class="primary-btn" data-action="start">${tr("start")}</button></div></div>`;
   }
   if (screen.type === "diagnostic") {
     const correct = state.completed[screen.id];
@@ -246,9 +264,12 @@ function renderScreen(screen) {
   }
   if (screen.type === "practice") {
     const landed = state.currentPosition ?? screen.start;
-    const canChoose = state.stepsTaken >= 3;
-    const canMove = state.stepsTaken < screen.moves + 1;
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) })}<div class="controls-row"><button class="move-btn" data-action="move-step" ${canMove ? "" : "disabled"}>${tr("step")}</button>${AnswerCards(screen.choices, screen.answer, canChoose)}</div></div>${HintLayer(state.stepsTaken === 3 ? tr("oneMoreStep") : tr("extraJump"))}`;
+    const canChoose = state.stepsTaken >= screen.moves;
+    const canMove = state.stepsTaken < screen.moves;
+    const practiceAction = canChoose
+      ? AnswerCards(screen.choices, screen.answer, true)
+      : `<button class="move-btn" data-action="move-step" ${canMove ? "" : "disabled"}>${tr("step")}</button><span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) })}<div class="controls-row">${practiceAction}</div></div>`;
   }
   if (screen.type === "mystery") {
     return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<img class="mystery-card ${state.completed[screen.id] ? "reveal" : ""}" src="${assets.objects.mystery}" alt="" />`)}${NumberLine({ min: 5, max: 12, start: screen.start, current: 10, hidden: state.completed[screen.id] ? [] : [screen.start], activeNumbers: [10], trailStart: screen.start, trailEnd: 10, badges: [8, 9, 10] })}<div class="controls-row"><div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>${AnswerCards(screen.choices, screen.answer, true)}</div></div>`;
@@ -257,8 +278,11 @@ function renderScreen(screen) {
     const landed = state.currentPosition ?? screen.start;
     const showLine = screen.type === "exit" || state.showHint || state.stepsTaken > 0;
     const movedEnough = state.stepsTaken >= screen.moves;
-    const standalone = `<div class="numberline-wrap character-only-zone">${CamelCharacter("thinking", "left:50%; --from-left:50%; --to-left:50%; bottom:10%; --base-y:0%; --camel-size:var(--character-normal);", "thinking")}</div>`;
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${showLine ? NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) }) : standalone}<div class="controls-row"><button class="move-btn" data-action="move-step" ${movedEnough ? "disabled" : ""}>${tr("step")}</button>${screen.type === "independent" ? `<button class="hint-btn" data-action="hint">${tr("hint")}</button>` : ""}${AnswerCards(screen.choices, screen.answer, movedEnough)}</div></div>${HintLayer(tr("revealLine"))}`;
+    const standalone = `<div class="numberline-wrap character-only-zone">${CamelCharacter("thinking", "left:50%; --from-left:50%; --to-left:50%; bottom:10%; --base-y:0%; --camel-size:var(--character-normal);", "thinking", getCamelDirection(screen.start, screen.start + screen.moves))}</div>`;
+    const challengeAction = movedEnough
+      ? AnswerCards(screen.choices, screen.answer, true)
+      : `<button class="move-btn" data-action="move-step">${tr("step")}</button>${screen.type === "independent" ? `<button class="hint-btn" data-action="hint">${tr("hint")}</button>` : ""}<span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${showLine ? NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) }) : standalone}<div class="controls-row">${challengeAction}</div></div>${HintLayer(tr("revealLine"))}`;
   }
   return `<div class="lesson-content result-layout"><div class="final-trophy-wrap"><img class="final-trophy" src="${assets.rewards.trophy}" alt="" /></div><div class="final-body"><div class="final-camel">${CamelCharacter("celebrate", "left:50%; --from-left:50%; --to-left:50%; bottom:0%; --base-y:0%; --camel-size:var(--character-celebration);", "celebrate")}</div><div class="result-summary-zone">${ResultPanel(screen)}</div></div></div>`;
 }
@@ -326,15 +350,12 @@ function handleNumber(number, screen) {
 function moveStep(screen) {
   if (!("moves" in screen)) return;
   if (state.currentPosition === null) state.currentPosition = screen.start;
-  const maxMoves = screen.type === "practice" ? screen.moves + 1 : screen.moves;
+  const maxMoves = screen.moves;
   if (state.stepsTaken >= maxMoves) return;
   state.previousPosition = state.currentPosition;
   state.stepsTaken += 1;
   state.currentPosition += 1;
   state.selectedAnswer = null;
-  if (screen.type === "practice" && state.stepsTaken === screen.moves + 1) {
-    state.showHint = true; state.previousPosition = state.currentPosition; state.currentPosition -= 1; state.stepsTaken -= 1; setCharacterMood("confused"); setFeedback("try", tr("extraJump")); return render();
-  }
   if (state.stepsTaken === screen.moves) {
     if (screen.type === "movement") {
       markAttempt(screen.id, true, { response: state.currentPosition }); setCharacterMood("happy"); burst("small");
