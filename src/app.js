@@ -1,4 +1,5 @@
 const isDevAssetPreview = new URLSearchParams(window.location.search).get("debug") === "assets";
+const isDirectionPreview = new URLSearchParams(window.location.search).get("debug") === "direction";
 
 const assets = {
   brand: {
@@ -39,6 +40,17 @@ const camelStateFiles = {
   confused: "camel-confused",
   celebrate: "camel-celebrate",
   pointing: "camel-pointing",
+};
+
+const camelSourceFacing = {
+  neutral: "left",
+  happy: "left",
+  thinking: "left",
+  walking: "left",
+  hop: "right",
+  confused: "left",
+  celebrate: "neutral",
+  pointing: "right",
 };
 
 const missingCamelStates = Object.keys(assets.characters).filter((key) => !assets.characters[key]);
@@ -165,13 +177,14 @@ function goTo(index) {
 function completeCurrent() { state.completed[lesson[state.screen].id] = true; }
 function canAdvance(screen) { return screen.type === "result" || state.completed[screen.id]; }
 
-function getCamelDirection(start, target) {
+function getMovementDirection(start, target) {
   if (!Number.isFinite(start) || !Number.isFinite(target) || start === target) return "neutral";
   return target > start ? "right" : "left";
 }
 
 function render() {
   if (isDevAssetPreview) return renderAssetDebug();
+  if (isDirectionPreview) return renderDirectionDebug();
   const screen = lesson[state.screen];
   document.documentElement.lang = state.lang;
   document.documentElement.dir = translations[state.lang].dir;
@@ -182,7 +195,7 @@ function render() {
       ${renderScreen(screen)}
       ${FeedbackLayer()}${RewardLayer()}
       <div class="bottom-bar">
-        <button class="secondary-btn nav-previous" data-action="prev" ${state.screen === 0 ? "disabled" : ""}>${tr("previous")}</button>
+        ${state.screen === 0 ? "" : `<button class="secondary-btn nav-previous" data-action="prev">${tr("previous")}</button>`}
         ${TeacherCue(screen.cue)}
         <button class="primary-btn nav-next" data-action="next" ${canAdvance(screen) ? "" : "disabled"}>${state.screen === lesson.length - 1 ? tr("restart") : tr("next")}</button>
       </div>
@@ -206,7 +219,9 @@ function CamelCharacter(stateName, style = "", motion = "", direction = "neutral
   const requested = state.characterMood ?? stateName;
   const src = assets.characters[requested];
   if (!src) return "";
-  return `<div class="character-anchor character-motion-${motion} character-state-${requested}" style="${style}"><img class="camel-image camel-facing-${direction}" src="${src}" alt="${tr("helpCamel")}" data-direction="${direction}" /></div>`;
+  const sourceFacing = camelSourceFacing[requested] ?? "left";
+  const shouldFlip = direction !== "neutral" && sourceFacing !== "neutral" && direction !== sourceFacing;
+  return `<div class="character-anchor character-motion-${motion} character-state-${requested}" style="${style}"><img class="camel-image ${shouldFlip ? "camel-flipped" : ""}" src="${src}" alt="${tr("helpCamel")}" data-direction="${direction}" data-source-facing="${sourceFacing}" /></div>`;
 }
 
 function TeacherCue(cueKeys) {
@@ -238,7 +253,7 @@ function NumberLine({ min = 1, max = 12, start, current, hidden = [], clickable 
   const destination = Number.isFinite(activeScreen.start) && Number.isFinite(activeScreen.moves)
     ? activeScreen.start + activeScreen.moves
     : camelNum;
-  const camelDirection = getCamelDirection(activeScreen.start ?? fromNum, destination);
+  const camelDirection = getMovementDirection(activeScreen.start ?? fromNum, destination);
   const trailLeft = trailStart && trailEnd ? position(Math.min(trailStart, trailEnd)) : "0%";
   const trailWidth = trailStart && trailEnd ? `${(Math.abs(trailEnd - trailStart) / count) * 100}%` : "0%";
   const ticks = [];
@@ -251,7 +266,7 @@ function NumberLine({ min = 1, max = 12, start, current, hidden = [], clickable 
 
 function renderScreen(screen) {
   if (screen.type === "welcome") {
-    return `<div class="lesson-content welcome-grid"><div class="journey-art"><img class="asset sign" src="${assets.objects.sign}" alt="" />${CamelCharacter("neutral", "left:92%; --from-left:76%; --to-left:92%; bottom:-7%; --camel-size:var(--character-hero);", "idle", "right")}</div><div class="mission-panel"><p class="kicker">${tr("numberLine")}</p><h1>${tr(screen.title)}</h1><p class="student-prompt">${tr(screen.prompt)}</p><button class="primary-btn" data-action="start">${tr("start")}</button></div></div>`;
+    return `<div class="lesson-content welcome-grid"><div class="journey-art"><img class="asset sign" src="${assets.objects.sign}" alt="" />${CamelCharacter("neutral", "left:40%; --from-left:22%; --to-left:40%; bottom:-24%; --camel-size:var(--character-hero);", "idle", "right")}</div><div class="mission-panel"><p class="kicker">${tr("numberLine")}</p><h1>${tr(screen.title)}</h1><p class="student-prompt">${tr(screen.prompt)}</p><button class="primary-btn" data-action="start">${tr("start")}</button></div></div>`;
   }
   if (screen.type === "diagnostic") {
     const correct = state.completed[screen.id];
@@ -278,7 +293,7 @@ function renderScreen(screen) {
     const landed = state.currentPosition ?? screen.start;
     const showLine = screen.type === "exit" || state.showHint || state.stepsTaken > 0;
     const movedEnough = state.stepsTaken >= screen.moves;
-    const standalone = `<div class="numberline-wrap character-only-zone">${CamelCharacter("thinking", "left:50%; --from-left:50%; --to-left:50%; bottom:10%; --base-y:0%; --camel-size:var(--character-normal);", "thinking", getCamelDirection(screen.start, screen.start + screen.moves))}</div>`;
+    const standalone = `<div class="numberline-wrap character-only-zone">${CamelCharacter("thinking", "left:50%; --from-left:50%; --to-left:50%; bottom:10%; --base-y:0%; --camel-size:var(--character-normal);", "thinking", getMovementDirection(screen.start, screen.start + screen.moves))}</div>`;
     const challengeAction = movedEnough
       ? AnswerCards(screen.choices, screen.answer, true)
       : `<button class="move-btn" data-action="move-step">${tr("step")}</button>${screen.type === "independent" ? `<button class="hint-btn" data-action="hint">${tr("hint")}</button>` : ""}<span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
@@ -354,7 +369,9 @@ function moveStep(screen) {
   if (state.stepsTaken >= maxMoves) return;
   state.previousPosition = state.currentPosition;
   state.stepsTaken += 1;
-  state.currentPosition += 1;
+  const destination = screen.start + screen.moves;
+  const movementDirection = getMovementDirection(screen.start, destination);
+  state.currentPosition += movementDirection === "left" ? -1 : 1;
   state.selectedAnswer = null;
   if (state.stepsTaken === screen.moves) {
     if (screen.type === "movement") {
@@ -396,6 +413,20 @@ function renderAssetDebug() {
     const src = assets.characters[stateName];
     return `<article class="asset-tile"><h2>${stateName}</h2>${src ? `<img src="${src}" alt="${stateName}" />` : `<div class="asset-missing">Missing: ${camelStateFiles[stateName]}</div>`}</article>`;
   }).join("")}</div></section>`;
+}
+
+function renderDirectionDebug() {
+  const cases = [[4, 6], [7, 10], [8, 11], [6, 4]];
+  document.documentElement.lang = "en";
+  document.documentElement.dir = "ltr";
+  app.innerHTML = `<section class="direction-debug"><h1>Camel direction QA</h1><div class="direction-grid">${cases.map(([start, target]) => {
+    const direction = getMovementDirection(start, target);
+    return `<article class="direction-case"><h2>${start} → ${target}</h2><strong>${direction.toUpperCase()}</strong><div class="direction-camel">${CamelCharacter("walking", "left:50%; bottom:0; --base-y:0%; --camel-size:180px;", "", direction)}</div></article>`;
+  }).join("")}</div></section>`;
+}
+
+if (isDirectionPreview) {
+  window.__camelDirectionQA = { getMovementDirection };
 }
 
 resetScreenProgress(lesson[0]);

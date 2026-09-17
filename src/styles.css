@@ -22,8 +22,8 @@
   --radius-card: 8px;
   --character-normal: clamp(126px, 18vh, 174px);
   --character-numberline: clamp(122px, 17vh, 164px);
-  --character-hero: clamp(166px, 25vh, 220px);
-  --character-celebration: clamp(190px, 27vh, 250px);
+  --character-hero: clamp(210px, 31vh, 300px);
+  --character-celebration: clamp(190px, 27vh, 270px);
   --equation-size: clamp(34px, 5.7vh, 60px);
 }
 
@@ -196,7 +196,7 @@ button {
 }
 
 .welcome-grid {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
   align-items: stretch;
   gap: 0;
   direction: ltr;
@@ -212,11 +212,12 @@ button {
 }
 
 .mission-panel {
-  grid-column: 7 / 13;
+  grid-column: 2;
   align-self: center;
   justify-self: end;
-  width: min(520px, 100%);
-  padding: 34px;
+  width: min(660px, 88%);
+  min-height: 36%;
+  padding: clamp(24px, 3.2vh, 34px);
   animation: missionPanelIn 620ms ease-out 1040ms both;
 }
 
@@ -231,6 +232,8 @@ button {
 }
 
 .mission-panel .primary-btn {
+  min-width: 20%;
+  width: fit-content;
   animation: startButtonIn 440ms ease-out 1500ms both;
 }
 
@@ -310,7 +313,7 @@ button:disabled {
 }
 
 .journey-art {
-  grid-column: 1 / 7;
+  grid-column: 1;
   position: relative;
   min-height: 100%;
   overflow: visible;
@@ -323,10 +326,10 @@ button:disabled {
 }
 
 .asset.sign {
-  width: clamp(108px, 17vh, 148px);
-  left: 65%;
+  width: clamp(82px, 12vh, 118px);
+  left: 67%;
   right: auto;
-  bottom: 13%;
+  bottom: 9%;
   transform-origin: center bottom;
   animation: signRise 620ms cubic-bezier(.16,.9,.2,1) 820ms both;
   z-index: 7;
@@ -358,14 +361,9 @@ button:disabled {
   display: block;
 }
 
-/* Supplied camel art faces left. Flip only the artwork when math moves right. */
-.camel-image.camel-facing-right {
+/* CamelCharacter normalizes the mixed source-asset orientations. */
+.camel-image.camel-flipped {
   transform: scaleX(-1);
-}
-
-.camel-image.camel-facing-left,
-.camel-image.camel-facing-neutral {
-  transform: scaleX(1);
 }
 
 .character-motion-idle,
@@ -398,7 +396,7 @@ button:disabled {
 }
 
 .activity-layout {
-  grid-template-rows: minmax(96px, var(--equation-zone)) minmax(0, 1fr) minmax(76px, var(--bottom-zone));
+  grid-template-rows: minmax(92px, 16%) minmax(0, 1fr) minmax(78px, 15%);
   overflow: visible;
 }
 
@@ -470,7 +468,9 @@ button:disabled {
   min-height: 0;
   display: grid;
   align-items: end;
-  padding: var(--space-4) var(--space-6) var(--space-1);
+  width: 90%;
+  justify-self: center;
+  padding: var(--space-4) var(--space-3) var(--space-1);
   overflow: visible;
 }
 
@@ -637,18 +637,39 @@ button:disabled {
 }
 
 .choice-card {
-  width: 104px;
-  min-width: 104px;
-  height: 72px;
-  min-height: 72px;
+  width: clamp(100px, 9vw, 154px);
+  min-width: 100px;
+  height: clamp(68px, 10vh, 106px);
+  min-height: 68px;
   display: grid;
   place-items: center;
   background: var(--paper);
-  border: 4px solid transparent;
+  border: 3px solid rgba(38, 183, 255, 0.72);
   color: #1f2f48;
   font-size: 34px;
   direction: ltr;
   unicode-bidi: isolate;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(31, 47, 72, 0.14);
+}
+
+.choice-card:hover:not(:disabled) {
+  border-color: var(--blue);
+}
+
+.choice-card:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 4px 9px rgba(31, 47, 72, 0.16);
+}
+
+.choice-card:focus-visible {
+  outline: 4px solid rgba(38, 183, 255, 0.3);
+  outline-offset: 3px;
+}
+
+.choice-card.selected {
+  border-color: #087eb7;
+  box-shadow: 0 0 0 3px rgba(38, 183, 255, 0.2), 0 9px 18px rgba(31, 47, 72, 0.16);
 }
 
 .choice-card.correct,
@@ -677,15 +698,17 @@ button:disabled {
 
 .feedback {
   position: absolute;
-  left: 34px;
-  bottom: 92px;
-  min-width: 240px;
-  max-width: 380px;
-  padding: 14px 18px;
+  left: 50%;
+  bottom: calc(var(--bottom-zone) + 48px);
+  transform: translateX(-50%);
+  width: max-content;
+  min-width: 0;
+  max-width: min(560px, 72%);
+  padding: 9px 14px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 11px 20px rgba(31, 47, 72, 0.16);
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 900;
   z-index: 12;
 }
@@ -726,7 +749,7 @@ button:disabled {
   left: var(--safe-margin);
   right: var(--safe-margin);
   bottom: 14px;
-  min-height: 58px;
+  min-height: 54px;
   display: grid;
   grid-template-columns: minmax(124px, 1fr) minmax(300px, 1.8fr) minmax(124px, 1fr);
   align-items: end;
@@ -756,6 +779,11 @@ button:disabled {
 
 .bottom-bar .teacher-cue {
   grid-column: 2;
+}
+
+.bottom-bar .teacher-cue summary {
+  padding: 8px 12px;
+  font-size: 15px;
 }
 
 [dir="rtl"] .bottom-bar .teacher-cue {
@@ -819,8 +847,8 @@ button:disabled {
 }
 
 .result-card {
-  width: min(680px, 56vw);
-  max-height: 62vh;
+  width: 100%;
+  max-height: 46vh;
   justify-self: center;
   padding: var(--space-2) var(--space-3);
   overflow: hidden;
@@ -843,8 +871,8 @@ button:disabled {
 
 .result-layout {
   grid-template-columns: 1fr;
-  grid-template-rows: 22% 78%;
-  gap: var(--space-2);
+  grid-template-rows: 13% 87%;
+  gap: var(--space-1);
   justify-items: center;
   align-items: center;
 }
@@ -890,27 +918,27 @@ button:disabled {
   width: 100%;
   height: 100%;
   display: grid;
-  place-items: end center;
+  place-items: center;
 }
 
 .final-trophy {
   position: static;
-  width: clamp(94px, 15vh, 136px);
+  width: clamp(62px, 8.5vh, 92px);
   animation: trophyPop 820ms cubic-bezier(.16,.9,.2,1) 160ms both;
 }
 
 .final-body {
-  width: min(980px, 86%);
+  width: min(1120px, 78%);
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(190px, 0.42fr) minmax(420px, 1fr);
-  gap: var(--space-6);
+  grid-template-columns: minmax(180px, 0.34fr) minmax(520px, 1fr);
+  gap: var(--space-3);
   align-items: center;
   justify-content: center;
 }
 
 [dir="rtl"] .final-body {
-  grid-template-columns: minmax(420px, 1fr) minmax(190px, 0.42fr);
+  grid-template-columns: minmax(520px, 1fr) minmax(180px, 0.34fr);
 }
 
 [dir="rtl"] .final-camel {
@@ -926,7 +954,7 @@ button:disabled {
   grid-column: 1;
   grid-row: 1;
   width: 100%;
-  height: clamp(210px, 34vh, 270px);
+  height: clamp(190px, 29vh, 280px);
   justify-self: center;
   overflow: visible;
 }
@@ -977,10 +1005,10 @@ button:disabled {
     transform: translate(-50%, var(--base-y, -100%)) scale(1);
   }
   48% {
-    transform: translate(-50%, calc(var(--base-y, -100%) - var(--hop-lift, 96px))) rotate(7deg) scale(1.1);
+    transform: translate(-50%, calc(var(--base-y, -100%) - var(--hop-lift, 96px))) rotate(7deg) scale(1);
   }
   78% {
-    transform: translate(-50%, calc(var(--base-y, -100%) + 16px)) rotate(-4deg) scale(0.94);
+    transform: translate(-50%, calc(var(--base-y, -100%) + 16px)) rotate(-4deg) scale(1);
   }
   100% {
     left: var(--to-left);
@@ -1106,6 +1134,43 @@ button:disabled {
   background: white;
   box-shadow: var(--shadow);
   direction: ltr;
+}
+
+.direction-debug {
+  width: min(1180px, calc(100vw - 32px));
+  padding: 24px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: var(--shadow);
+  direction: ltr;
+}
+
+.direction-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.direction-case {
+  min-height: 250px;
+  padding: 16px;
+  border: 2px solid rgba(38, 183, 255, 0.35);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.direction-case h2 {
+  font-size: 24px;
+}
+
+.direction-case strong {
+  color: #087eb7;
+}
+
+.direction-camel {
+  position: relative;
+  height: 190px;
 }
 
 .asset-debug h1 {
