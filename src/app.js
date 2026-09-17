@@ -195,7 +195,7 @@ function render() {
       <div class="scene-bg"></div>
       <div class="top-bar">${HeaderBrand(screen)}${ProgressBar()}${LanguageSwitcher()}</div>
       ${renderScreen(screen)}
-      ${FeedbackLayer()}${RewardLayer()}
+      ${RewardLayer()}
       <div class="bottom-bar" data-screen-type="${screen.type}">
         ${state.screen === 0 ? "" : `<button class="secondary-btn nav-previous" data-action="prev">${tr("previous")}</button>`}
         ${TeacherCue(screen.cue)}
@@ -234,15 +234,22 @@ function QuestionCard(screen, extras = "") {
   return `<div class="question-card"><div><p class="kicker">${tr(screen.label)}</p><h2>${tr(screen.title)}</h2></div>${screen.equation ? equation(screen.equation, state.completed[screen.id] ? screen.answer : null) : `<p class="student-prompt">${screen.prompt ? tr(screen.prompt) : ""}</p>`}${extras}</div>`;
 }
 
-function FeedbackLayer() { return state.feedback ? `<div class="feedback ${state.feedback.kind}">${state.feedback.text}</div>` : ""; }
+function FeedbackLine() {
+  const message = state.feedback?.text ?? (state.showHint ? tr("revealLine") : "");
+  if (!message) return "";
+  const showCheck = state.feedback?.kind === "good" && state.completed[lesson[state.screen].id];
+  return `<div class="feedback ${state.feedback?.kind ?? "try"}" role="status">${showCheck ? "✓ " : ""}${message}</div>`;
+}
+
+function InteractionZone(content = "") {
+  return `<div class="controls-row">${FeedbackLine()}${content ? `<div class="student-action-row">${content}</div>` : ""}</div>`;
+}
 
 function RewardLayer() {
   if (!state.rewardStrength) return "";
   const count = state.rewardStrength === "final" ? 20 : state.rewardStrength === "stage" ? 12 : 7;
   return `<div class="reward-layer reward-${state.rewardStrength}" data-reward-key="${state.rewardKey}">${Array.from({ length: count }, (_, i) => `<span class="reward-particle particle-${i % 8}">${i % 3 === 0 ? "★" : ""}</span>`).join("")}</div>`;
 }
-
-function HintLayer(text) { return state.showHint ? `<div class="hint-layer">${text}</div>` : ""; }
 
 function NumberLine({ min = 1, max = 12, start, current, hidden = [], clickable = false, activeNumbers = [], nearNumbers = [], trailStart, trailEnd, badges = [] }) {
   const count = max - min;
@@ -274,12 +281,13 @@ function renderScreen(screen) {
   if (screen.type === "diagnostic") {
     const correct = state.completed[screen.id];
     const choices = state.activeBlank ? AnswerCards(screen.hidden, state.activeBlank, true) : "";
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 10, current: correct ? screen.target : 3, hidden: screen.hidden, clickable: true, activeNumbers: correct ? [screen.target] : [], nearNumbers: state.feedback?.kind === "try" ? [4, 6] : [] })}<div class="controls-row">${choices}</div></div>`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 10, current: correct ? screen.target : 3, hidden: screen.hidden, clickable: true, activeNumbers: correct ? [screen.target] : [], nearNumbers: state.feedback?.kind === "try" ? [4, 6] : [] })}${InteractionZone(choices)}</div>`;
   }
   if (screen.type === "movement") {
     const landed = state.currentPosition ?? screen.start;
     const done = state.stepsTaken >= screen.moves;
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) })}<div class="controls-row"><button class="move-btn" data-action="move-step" ${done ? "disabled" : ""}>${tr("step")}</button><span class="answer-slot">${done ? formatNumber(screen.answer) : `${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}`}</span></div></div>`;
+    const action = done ? "" : `<button class="move-btn" data-action="move-step">${tr("step")}</button><span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) })}${InteractionZone(action)}</div>`;
   }
   if (screen.type === "practice") {
     const landed = state.currentPosition ?? screen.start;
@@ -288,10 +296,10 @@ function renderScreen(screen) {
     const practiceAction = canChoose
       ? AnswerCards(screen.choices, screen.answer, true)
       : `<button class="move-btn" data-action="move-step" ${canMove ? "" : "disabled"}>${tr("step")}</button><span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) })}<div class="controls-row">${practiceAction}</div></div>`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) })}${InteractionZone(practiceAction)}</div>`;
   }
   if (screen.type === "mystery") {
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<img class="mystery-card ${state.completed[screen.id] ? "reveal" : ""}" src="${assets.objects.mystery}" alt="" />`)}${NumberLine({ min: 5, max: 12, start: screen.start, current: 10, hidden: state.completed[screen.id] ? [] : [screen.start], activeNumbers: [10], trailStart: screen.start, trailEnd: 10, badges: [8, 9, 10] })}<div class="controls-row"><div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>${AnswerCards(screen.choices, screen.answer, true)}</div></div>`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<img class="mystery-card ${state.completed[screen.id] ? "reveal" : ""}" src="${assets.objects.mystery}" alt="" />`)}${NumberLine({ min: 5, max: 12, start: screen.start, current: 10, hidden: state.completed[screen.id] ? [] : [screen.start], activeNumbers: [10], trailStart: screen.start, trailEnd: 10, badges: [8, 9, 10] })}${InteractionZone(AnswerCards(screen.choices, screen.answer, true))}</div>`;
   }
   if (screen.type === "independent" || screen.type === "exit") {
     const landed = state.currentPosition ?? screen.start;
@@ -301,7 +309,7 @@ function renderScreen(screen) {
     const challengeAction = movedEnough
       ? AnswerCards(screen.choices, screen.answer, true)
       : `<button class="move-btn" data-action="move-step">${tr("step")}</button>${screen.type === "independent" ? `<button class="hint-btn" data-action="hint">${tr("hint")}</button>` : ""}<span class="step-progress">${formatNumber(state.stepsTaken)} / ${formatNumber(screen.moves)}</span>`;
-    return `<div class="lesson-content activity-layout">${QuestionCard(screen, `<div class="answer-slot" data-answer-slot>${state.selectedAnswer ? formatNumber(state.selectedAnswer) : unknownAnswer()}</div>`)}${showLine ? NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) }) : standalone}<div class="controls-row">${challengeAction}</div></div>${HintLayer(tr("revealLine"))}`;
+    return `<div class="lesson-content activity-layout">${QuestionCard(screen)}${showLine ? NumberLine({ min: 1, max: 12, start: screen.start, current: landed, activeNumbers: [screen.start], trailStart: screen.start, trailEnd: landed, badges: Array.from({ length: state.stepsTaken }, (_, i) => screen.start + i + 1) }) : standalone}${InteractionZone(challengeAction)}</div>`;
   }
   return `<div class="lesson-content result-layout"><div class="final-body"><div class="final-camel">${CamelCharacter("celebrate", "left:50%; --from-left:50%; --to-left:50%; bottom:0%; --base-y:0%; --camel-size:var(--character-celebration);", "celebrate")}</div><div class="result-summary-zone"><img class="final-trophy" src="${assets.rewards.trophy}" alt="" />${ResultPanel(screen)}</div></div></div>`;
 }
@@ -309,8 +317,10 @@ function renderScreen(screen) {
 function AnswerCards(choices, answer, enabled) {
   return choices.map((choice) => {
     const selected = state.selectedAnswer === choice;
-    const cls = ["choice-card", selected ? "selected" : "", state.completed[lesson[state.screen].id] && choice === answer ? "correct" : ""].filter(Boolean).join(" ");
-    return `<button class="${cls}" data-answer="${choice}" draggable="${enabled ? "true" : "false"}" ${enabled ? "" : "disabled"}>${formatNumber(choice)}</button>`;
+    const completed = state.completed[lesson[state.screen].id];
+    const isCorrect = completed && choice === answer;
+    const cls = ["choice-card", selected ? "selected" : "", isCorrect ? "correct" : "", completed && !isCorrect ? "choice-subdued" : ""].filter(Boolean).join(" ");
+    return `<button class="${cls}" data-answer="${choice}" draggable="${enabled && !completed ? "true" : "false"}" ${enabled && !completed ? "" : "disabled"}>${isCorrect ? "✓ " : ""}${formatNumber(choice)}</button>`;
   }).join("");
 }
 

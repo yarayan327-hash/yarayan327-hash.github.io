@@ -635,21 +635,27 @@ button:disabled {
 .controls-row {
   min-height: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: 8px;
   align-self: stretch;
   padding-bottom: var(--space-1);
 }
 
+.student-action-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  min-height: 58px;
+}
+
 .step-progress {
-  min-width: 86px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  min-width: 70px;
+  padding: 6px 10px;
   color: #1f2f48;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 900;
   text-align: center;
   direction: ltr;
@@ -657,20 +663,21 @@ button:disabled {
 }
 
 .choice-card {
-  width: clamp(100px, 9vw, 154px);
-  min-width: 100px;
-  height: clamp(68px, 10vh, 106px);
-  min-height: 68px;
+  width: clamp(94px, 8vw, 138px);
+  min-width: 94px;
+  height: clamp(58px, 8vh, 78px);
+  min-height: 58px;
   display: grid;
   place-items: center;
   background: var(--paper);
-  border: 3px solid rgba(38, 183, 255, 0.72);
+  border: 2px solid rgba(38, 183, 255, 0.72);
   color: #1f2f48;
   font-size: 34px;
   direction: ltr;
   unicode-bidi: isolate;
+  white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 8px 16px rgba(31, 47, 72, 0.14);
+  box-shadow: 0 5px 11px rgba(31, 47, 72, 0.12);
 }
 
 .choice-card:hover:not(:disabled) {
@@ -696,11 +703,24 @@ button:disabled {
 .choice-card.selected.correct {
   border-color: var(--green);
   background: #eaf8ef;
+  box-shadow: none;
 }
 
 .choice-card.selected:not(.correct) {
   border-color: var(--orange);
   background: #fff3e4;
+}
+
+.choice-card:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.choice-card.choice-subdued {
+  opacity: 0.22;
+  border-color: transparent;
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: none;
 }
 
 .answer-slot {
@@ -717,20 +737,14 @@ button:disabled {
 }
 
 .feedback {
-  position: absolute;
-  left: 50%;
-  bottom: calc(var(--bottom-zone) + 48px);
-  transform: translateX(-50%);
-  width: max-content;
-  min-width: 0;
-  max-width: min(560px, 72%);
-  padding: 9px 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 11px 20px rgba(31, 47, 72, 0.16);
-  font-size: 17px;
+  width: min(720px, 88%);
+  padding: 0 8px;
+  background: transparent;
+  box-shadow: none;
+  font-size: 16px;
   font-weight: 900;
-  z-index: 12;
+  line-height: 1.25;
+  text-align: center;
 }
 
 .feedback.good {
@@ -784,7 +798,8 @@ button:disabled {
 .bottom-bar .primary-btn,
 .bottom-bar .secondary-btn {
   margin: 0;
-  min-width: 124px;
+  width: 148px;
+  min-width: 0;
   min-height: 52px;
   padding: 10px 20px;
   font-size: 18px;
@@ -800,7 +815,7 @@ button:disabled {
 
 .bottom-bar .teacher-cue {
   order: 2;
-  width: min(320px, 36vw);
+  width: min(210px, 26vw);
 }
 
 .bottom-bar .teacher-cue summary {
@@ -874,9 +889,9 @@ button:disabled {
 
 .result-card {
   width: 100%;
-  max-height: 46vh;
+  max-height: 52vh;
   justify-self: center;
-  padding: clamp(54px, 7vh, 72px) var(--space-3) var(--space-2);
+  padding: clamp(58px, 7.5vh, 76px) var(--space-3) clamp(30px, 4vh, 38px);
   overflow: hidden;
   animation: resultCardIn 520ms ease-out 440ms both;
 }
@@ -906,8 +921,8 @@ button:disabled {
 .result-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  margin: 10px 0 0;
+  gap: 8px;
+  margin: 20px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -916,7 +931,7 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: 6px 8px;
+  padding: 7px 9px;
   border-radius: 8px;
   background: rgba(38, 183, 255, 0.1);
   font-size: 13px;
